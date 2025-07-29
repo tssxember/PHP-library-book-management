@@ -193,6 +193,15 @@ class Database extends Config
     {
         parent::__construct();
 
+        // Load database credentials from separate file
+        $credentialsFile = ROOTPATH . 'database_credentials.env';
+        if (file_exists($credentialsFile)) {
+            $credentials = parse_ini_file($credentialsFile);
+            if (isset($credentials['database.default.password'])) {
+                $this->default['password'] = $credentials['database.default.password'];
+            }
+        }
+
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
         // we don't overwrite live data on accident.
